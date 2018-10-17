@@ -1,20 +1,21 @@
 var express = require('express');
 var router = express.Router();
 var mongo = require('mongodb').MongoClient;
-var objectId = require('mongodb').ObjectID;
 var assert = require('assert');
-var url = 'mongodb://localhost:27017/Facturas';
+var url = 'mongodb://localhost:27017';
+var dbname = 'MongoDB';
+var objectId = require('mongodb').ObjectID;
 var db;
 
 mongo.connect(url, function(err, client) {
   if(!err) {
     console.log("Conexion exitosa.");
-    db = client.db('Facturas');
+    db = client.db(dbname);
   }
 });
 
 router.get('/api/v1/factura/', function(req, res, next) {
-  db.collection('facturas').find().toArray((err, result) => {
+  db.collection('Facturas').find().toArray((err, result) => {
     if (err) {
       return console.log(err)
     } else {
@@ -32,7 +33,7 @@ router.post('/api/v1/factura/', function(req, res, next) {
     nombre: req.body.nombre,
     anulada: req.body.anulada
   }
-  db.collection('facturas').insertOne(factura, function(err, result){
+  db.collection('Facturas').insertOne(factura, function(err, result){
     assert.equal(null, err);
     if (err) {
       return console.log(err)
@@ -45,7 +46,7 @@ router.post('/api/v1/factura/', function(req, res, next) {
 
 router.delete('/api/v1/factura/:id', function(req, res, next) {
   var id = req.params.id;
-  db.collection('facturas').deleteOne({"_id": objectId(id)}, function(err, result) {
+  db.collection('Facturas').deleteOne({"_id": objectId(id)}, function(err, result) {
     assert.equal(null, err);
     if (err) {
       return console.log(err)
@@ -66,7 +67,7 @@ router.put('/api/v1/factura/:id', function(req, res, next) {
     nombre: req.body.nombre,
     anulada: req.body.anulada
   }
-  db.collection('facturas').updateOne({"_id": objectId(id)}, {$set: factura}, function(err, result) {
+  db.collection('Facturas').updateOne({"_id": objectId(id)}, {$set: factura}, function(err, result) {
     assert.equal(null, err);
     if (err) {
       return console.log(err)
